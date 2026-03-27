@@ -3,10 +3,10 @@ numpy
 pandas
 matplotlib
 seaborn
-scipy
 statsmodels
 scikit-learn
 streamlit
 fastapi
 uvicorn
+gunicorn
 pydantic
