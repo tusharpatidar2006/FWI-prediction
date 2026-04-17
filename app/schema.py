@@ -1,27 +1,24 @@
 from pydantic import BaseModel, Field
 
 
-class FireFeaturesInput(BaseModel):
+class PredictionInput(BaseModel):
     """
-    Input features for Algerian Forest Fire FWI (Fire Weather Index) prediction.
-
-    9 weather/fuel-moisture features after correlation-based feature removal
-    (threshold=0.85). The 'Classes' column is excluded — the scaler was
-    fitted on these 9 numerical weather features only.
+    Input schema for the Fire Weather Index (FWI) prediction endpoint.
+    Features must be provided in this exact order internally.
     """
 
-    Temperature: float = Field(..., example=29.0, description="Max temperature in Celsius")
-    RH: float = Field(..., example=57.0, description="Relative Humidity in %")
-    Ws: float = Field(..., example=18.0, description="Wind speed in km/h")
-    Rain: float = Field(..., example=0.0, description="Total rainfall in mm")
-    FFMC: float = Field(..., example=65.7, description="Fine Fuel Moisture Code index")
-    DMC: float = Field(..., example=3.4, description="Duff Moisture Code index")
-    DC: float = Field(..., example=7.6, description="Drought Code index")
-    ISI: float = Field(..., example=1.3, description="Initial Spread Index")
-    BUI: float = Field(..., example=3.4, description="Buildup Index")
+    Temperature: float = Field(..., description="Temperature in Celsius", example=29.0)
+    RH: float = Field(..., description="Relative Humidity in %", example=57.0)
+    Ws: float = Field(..., description="Wind speed in km/h", example=18.0)
+    Rain: float = Field(..., description="Rainfall in mm", example=0.0)
+    FFMC: float = Field(..., description="Fine Fuel Moisture Code", example=65.7)
+    DMC: float = Field(..., description="Duff Moisture Code", example=3.4)
+    DC: float = Field(..., description="Drought Code", example=7.6)
+    ISI: float = Field(..., description="Initial Spread Index", example=1.3)
+    BUI: float = Field(..., description="Build Up Index", example=3.4)
 
-    class Config:
-        json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "Temperature": 29.0,
                 "RH": 57.0,
@@ -34,8 +31,24 @@ class FireFeaturesInput(BaseModel):
                 "BUI": 3.4,
             }
         }
+    }
 
 
-class PredictionResponse(BaseModel):
-    fwi_prediction: float = Field(..., description="Predicted Fire Weather Index (FWI)")
-    status: str = Field(..., description="Prediction status message")
+class PredictionOutput(BaseModel):
+    """
+    Output schema returned after a successful prediction.
+    """
+
+    prediction: float = Field(..., description="Predicted FWI score")
+    status: str = Field(default="success", description="Request status")
+
+
+class HealthResponse(BaseModel):
+    """
+    Response schema for the /health endpoint.
+    """
+
+    status: str
+    model_loaded: bool
+    scaler_loaded: bool
+    message: str
