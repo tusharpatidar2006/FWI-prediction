@@ -102,8 +102,8 @@ venv\Scripts\activate
 3. Install dependencies
 pip install -r requirements.txt
 
-Run FastAPI Server
-uvicorn app:app --reload
+Run FastAPI Server using URL
+https://fwi-prediction-5ca6.onrender.com
 
-Run Streamlit UI
-streamlit run streamlit.py
+Run Streamlit URL
+https://fwi-prediction-for-algerian-forest.streamlit.app/
